@@ -20,6 +20,7 @@ const database=client.db('wood_Craft')
 const userCollection=database.collection('user')
 const productCollection=database.collection('products')
 const orderCollection=database.collection('orders')
+const reviewCollection=database.collection('reviews')
 
 //POST api to add  user in database
 app.post('/users',async(req,res)=>{
@@ -48,7 +49,7 @@ app.get('/users/:email',async(req,res)=>{
     const filter={email : email}
     const result=await userCollection.findOne(filter)
     let isAdmin=false
-    if(result.role === 'admin'){
+    if(result?.role === 'admin'){
         isAdmin=true
     }
     res.json({admin: isAdmin})
@@ -59,7 +60,7 @@ const products=req.body
 const result=await productCollection.insertOne(products)
 res.json(result)
 })
-//GET API (show products pro database)
+//GET API (show products from database)
 app.get('/showItems',async(req,res)=>{
     const items=req.body
     const result=await productCollection.find(items).toArray()
@@ -90,6 +91,49 @@ app.post('/ordersend',async(req,res)=>{
     const result=await orderCollection.insertOne(sendOrder)
     console.log('order send.....',result)
     res.json(result)
+})
+//GET API (show all order in Admin page)
+app.get('/allorders',async(req,res)=>{
+    const allorder=req.body
+    const result=await orderCollection.find(allorder).toArray()
+    res.json(result)
+    console.log(result)
+})
+//GET API (show customer orders which they have ordered)
+app.get('/myOrders/:email',async(req,res)=>{
+    const myOrders=req.params.email
+    const filter={email : myOrders}
+    const result=await orderCollection.find(filter).toArray()
+    res.json(result)
+})
+//DELETE API (delete from myorder page)
+app.delete('/deleteMyOrder/:id',async(req,res)=>{
+    const id=req.params.id
+    const query = {_id : objectId(id)}
+    const result=await orderCollection.deleteOne(query)
+    res.json(result)
+})
+//DELETE API (delete from Admin  page)
+app.delete('/deleteManageOrder/:id',async(req,res)=>{
+    const id=req.params.id
+    const query={_id : objectId(id)}
+    const result=await orderCollection.deleteOne(query)
+    res.json(result)
+})
+//POST API (Add review in database)
+app.post('/addReview',async(req,res)=>{
+    const sendReview=req.body
+    console.log(req.body)
+    const result=await reviewCollection.insertOne(sendReview)
+    console.log(' Review.....',result)
+    res.json(result)
+})
+//GET API (show review in homepage)
+app.get('/getAllreviews',async(req,res)=>{
+    const allreview=req.body
+    const result=await reviewCollection.find(allreview).toArray()
+    res.json(result)
+    console.log(result)
 })
 }
 finally{
