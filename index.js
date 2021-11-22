@@ -42,7 +42,7 @@ app.put('/users/admin',async(req,res)=>{
     res.json(result)
     console.log(result)
 })
-//verify admin GET API
+// GET API(verify admin)
 app.get('/users/:email',async(req,res)=>{
     const email=req.params.email
     console.log(req.params.email)
