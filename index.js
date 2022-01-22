@@ -21,6 +21,7 @@ const userCollection=database.collection('user')
 const productCollection=database.collection('products')
 const orderCollection=database.collection('orders')
 const reviewCollection=database.collection('reviews')
+const aesopCollection=database.collection('aesopProduct')
 
 //POST api to add  user in database
 app.post('/users',async(req,res)=>{
@@ -134,6 +135,13 @@ app.get('/getAllreviews',async(req,res)=>{
     const result=await reviewCollection.find(allreview).toArray()
     res.json(result)
     console.log(result)
+})
+//GET API (show AESOP products from database)
+app.get('/aesopItem',async(req,res)=>{
+    const items=req.body
+    const result=await aesopCollection.find(items).toArray()
+    res.json(result)
+
 })
 }
 finally{
